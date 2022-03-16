@@ -1,7 +1,7 @@
 function dstatedt = CubeSAT(t, state)
 %Globals
-global BxI ByI BzI lastMagUpdate nextMagUpdate lastSensorUpdate nextSensorUpdate 
-global BfieldMeasured pqrMeasured
+global BI BB lastMagUpdate nextMagUpdate lastSensorUpdate nextSensorUpdate 
+global BfieldMeasured pqrMeasured invI m I
 
 x = state(1);
 y = state(2);
@@ -10,12 +10,8 @@ xdot = state(4);
 ydot = state(5);
 zdot = state(6);
 
-% inertia and mass
-m = 4; %kg
-I = [5/6 0 0; 0 5/6 0;0 0 1/6]; %For cuboid where a=1,b=1,c=3
-
 % Translational kinematics
-vel = state(4:6);
+vel = [xdot;ydot;zdot];
 
 %Rotational Kinematics
 q0123 = state(7:10);
@@ -44,35 +40,38 @@ if t >= lastMagUpdate
     latitude = 90-thetaE*180/pi;
     longditude = psiE*180/pi;
 
-    %IGRF Setup, output in nT so convert to T
+    % IGRF Setup, output in nT so convert to T
     % Usage: [BX, BY, BZ] = IGRF(TIME, LATITUDE, LONGITUDE, ALTITUDE, COORD)
     [BN, BE, BD] = igrf('01-Jan-2000', latitude, longditude, rho/1000, 'geocentric');
-    % Convert from NED frame to Inertial frame
+
+    % Convert from NED frame to inertial frame
     BNED = [BN; BE; -BD];  %ECI frame has Down as Up
-    BI = TIB(phiE, thetaE+pi, psiE)*BNED;
-    BxI = BI(1)*1e-9;
-    ByI = BI(2)*1e-9;
-    BzI = BI(3)*1e-9;
-    %BB = TIBquat
+    BI = (TIB(phiE, thetaE+pi, psiE)*BNED).*1e-9;
+    
+    % Convert inertial frame to body frame
+    BB = TIBquat(q0123)*BI;
 end
 
-% if t >= lastSensorUpdate
-%     lastSensorUpdate = lastSensorUpdate + nextSensorUpdate;
-%     [BfieldMeasured, pqrMeasured] = Sensor(BB,pqr);
-% end
+% Take sensor measurements and add sensor noise
+if t >= lastSensorUpdate
+    lastSensorUpdate = lastSensorUpdate + nextSensorUpdate;
+    [BfieldMeasured, pqrMeasured] = Sensor(BB,pqr);
+end
 
 
 % Translational Dynamics
 F = Fgrav; %ignore solar radiation pressure & aerodynamic drag
 accel = F/m;
 
-
-%Magnetorquer
-LMN_magtorquers = [0;0;0];
+% Magnetorquer
+magnetorquer_params;
+current = controls(BfieldMeasured,pqrMeasured);
+muB = current*mu;
+LMN_magtorquers = cross(muB,BB);
 
 % Rotational Dynamics
 H = I*pqr;
-pqrdot = I\(LMN_magtorquers - cross(pqr,H));
+pqrdot = invI*(LMN_magtorquers - cross(pqr,H));
 
-%Derivatives vector
+% Derivatives vector
 dstatedt = [vel;accel;q0123dot;pqrdot];
