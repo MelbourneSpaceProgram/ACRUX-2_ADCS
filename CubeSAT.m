@@ -1,7 +1,7 @@
 function dstatedt = CubeSAT(t, state)
 %Globals
 global BI BB lastMagUpdate nextMagUpdate lastSensorUpdate nextSensorUpdate 
-global BfieldMeasured pqrMeasured invI m I
+global BfieldMeasured pqrMeasured invI m I SunI SunB
 
 x = state(1);
 y = state(2);
@@ -29,7 +29,7 @@ rho = norm(r);
 rhat = r/rho;
 Fgrav = -(G*M*m/rho^2)*rhat;
 
-%Using IGRF magnetic field model
+%Using IGRF magnetic field model and Sun sensor model
 if t >= lastMagUpdate
     lastMagUpdate = lastMagUpdate + nextMagUpdate;
 
@@ -50,6 +50,15 @@ if t >= lastMagUpdate
     
     % Convert inertial frame to body frame
     BB = TIBquat(q0123)*BI;
+
+
+    % Get MJD for sun vector
+    MJD = Mjday(2000, 1, 1, 0, 0, t);
+    
+    % Geocentric position of the Sun (in [m]), referred
+    % to the mean equator and equinox of J2000 (EME2000, ICRF)
+    SunI = SunPos(MJD);
+    SunB = TIBquat(q0123)*SunI;
 end
 
 % Take sensor measurements and add sensor noise
