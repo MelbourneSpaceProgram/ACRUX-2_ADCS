@@ -50,15 +50,11 @@ if t >= lastMagUpdate
     
     % Convert inertial frame to body frame
     BB = TIBquat(q0123)*BI;
-
-
-    % Get MJD for sun vector
-    MJD = Mjday(2000, 1, 1, 0, 0, t);
     
     % Geocentric position of the Sun (in [m]), referred
     % to the mean equator and equinox of J2000 (EME2000, ICRF)
-    SunI = SunPos(MJD);
-    SunB = TIBquat(q0123)*SunI;
+    % SunI = SunPos(MJD);
+    % SunB = TIBquat(q0123)*SunI;
 end
 
 % Take sensor measurements and add sensor noise

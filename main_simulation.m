@@ -44,7 +44,7 @@ state = [x0;y0;z0;xdot0;ydot0;zdot0;q0123_0;p0;q0;r0];
 
 %Orbital period (Assume circular orbit)
 period = 2*pi*sqrt(semi_major_axis^3/mu); %Kepler's third law
-num_orbits = 1;
+num_orbits = 7;
 tfinal = period*num_orbits;
 timestep = 4; %Determines how often the RK4 model is called
 tout = 0:timestep:tfinal;
@@ -56,30 +56,17 @@ stateout = zeros(length(tout), length(state));
 
 
 %Initialise vectors then loop through stateout to extract magnetic field
-BxIout = zeros(length(stateout));
-ByIout = zeros(length(stateout));
-BzIout = zeros(length(stateout));
+BxIout = zeros(length(stateout), 1);
+ByIout = zeros(length(stateout), 1);
+BzIout = zeros(length(stateout), 1);
 
-BxBout = zeros(length(stateout));
-ByBout = zeros(length(stateout));
-BzBout = zeros(length(stateout));
+BxBout = zeros(length(stateout), 1);
+ByBout = zeros(length(stateout), 1);
+BzBout = zeros(length(stateout), 1);
 
-BxBm = zeros(length(stateout));
-ByBm = zeros(length(stateout));
-BzBm = zeros(length(stateout));
-
-%Initialise vectors then loop through stateout to extract sun vecor
-SunxIout = zeros(length(stateout));
-SunyIout = zeros(length(stateout));
-SunzIout = zeros(length(stateout));
-
-SunxBout = zeros(length(stateout));
-SunyBout = zeros(length(stateout));
-SunzBout = zeros(length(stateout));
-
-SunxSunm = zeros(length(stateout));
-SunySunm = zeros(length(stateout));
-SunzSunm = zeros(length(stateout));
+BxBm = zeros(length(stateout), 1);
+ByBm = zeros(length(stateout), 1);
+BzBm = zeros(length(stateout), 1);
 
 nextMagUpdate = 10; %Determines how often the IGRF model is called
 lastMagUpdate = 0;
@@ -114,15 +101,6 @@ for idx = 1:length(tout)
     BxBout(idx) = BB(1);
     ByBout(idx) = BB(2);
     BzBout(idx) = BB(3);
-
-    %Save Sun Vector Data
-    SunxIout(idx) = SunI(1);
-    SunyIout(idx) = SunI(2);
-    SunzIout(idx) = SunI(3);
-
-    SunxBout(idx) = SunB(1);
-    SunyBout(idx) = SunB(2);
-    SunzBout(idx) = SunB(3);
 
 
     %Add noise to body frame magnetic field measurements
