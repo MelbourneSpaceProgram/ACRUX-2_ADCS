@@ -17,15 +17,18 @@ invI = inv(I);
 %ICs for postiion and velocity
 altitude = 600e3;  %Approximate orbit altitude of CubeSAT in meters
 inclination = 45*pi/180;   %Change orbit inclination here, 0 is equitorial
+ecc = 0.1; %Eccentricity of orbit, 0 for circular orbit. <0.25 for LEO.
 
 x0 = R + altitude;
 y0 = 0;
 z0 = 0;
-semi_major_axis = norm([x0,y0,z0]);   %Circular orbit
-vcirc = sqrt(mu/semi_major_axis);
+dist2CoE = norm([x0,y0,z0]); %Distance to center of Earth (point mass)
+semi_major_axis = dist2CoE/(1-ecc);
+v0 = sqrt(mu*(2/dist2CoE - 1/semi_major_axis));
+
 xdot0 = 0;
-ydot0 = vcirc*cos(inclination);
-zdot0 = vcirc*sin(inclination);
+ydot0 = v0*cos(inclination);
+zdot0 = v0*sin(inclination);
 
 %ICs for attitude and angular velocity
 phi0 = 0;
