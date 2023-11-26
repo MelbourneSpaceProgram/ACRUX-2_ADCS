@@ -12,6 +12,8 @@ Required MATLAB Addons:
 
 This might only work on windows PCs due to Xbox input (script is a .mexw64 file). Alternative coming soon(tm).
 
+XInput for Simulink - https://github.com/MatVo1992/Simulink-XInput-Controller
+
 ## Orbital Modelling:
 ADCS Simulation for ACRUX-2 CubeSAT mission for MSP, referenced resource from Aerospace Mechanics and Controls - Carlos Jose Montalvo
 
