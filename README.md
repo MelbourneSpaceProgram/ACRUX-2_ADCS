@@ -23,4 +23,4 @@ IGRF Magnetic Field Model - https://www.mathworks.com/matlabcentral/fileexchange
 
 
 Please note: 
-Before merging repositories, Maxwell Jones (mwajones), Yang Goh (Neva-Y) and vertije were the main contributers to /ACRUX-2_ADCS_DETUMBLE-main, /ADCS_BdotAlgo-main, and /ADCS_test_ESP-main
+Before merging repositories on 27/08/2024, Maxwell Jones (mwajones), Yang Goh (Neva-Y) and vertije were the main contributers to /ACRUX-2_ADCS_DETUMBLE-main, /ADCS_BdotAlgo-main, and /ADCS_test_ESP-main.
