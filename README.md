@@ -20,3 +20,7 @@ ADCS Simulation for ACRUX-2 CubeSAT mission for MSP, referenced resource from Ae
 Sun Positioning Model - https://au.mathworks.com/matlabcentral/fileexchange/56042-sun-position
 
 IGRF Magnetic Field Model - https://www.mathworks.com/matlabcentral/fileexchange/34388-international-geomagnetic-reference-field-igrf-model
+
+
+Please note: 
+Before merging repositories, Maxwell Jones (mwajones), Yang Goh (Neva-Y) and vertije were the main contributers to /ACRUX-2_ADCS_DETUMBLE-main, /ADCS_BdotAlgo-main, and /ADCS_test_ESP-main
